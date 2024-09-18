@@ -1,0 +1,148 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FAF4EE; /* Fundo similar à cor clara do exemplo */
+    color: #333;
+}
+
+h1, h2 {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    gap: 30px; /* Espaçamento entre o menu e o carrinho */
+}
+
+/* Seção do Menu de Sobremesas */
+.menu {
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Colunas adaptáveis */
+    gap: 20px;
+}
+
+/* Itens de menu */
+.menu-item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para os cards */
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px); /* Pequeno efeito de elevação ao passar o mouse */
+}
+
+.menu-item img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.menu-item h3 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.menu-item p {
+    font-size: 16px;
+    color: #888; /* Cor mais suave para o preço */
+}
+
+.add-to-cart {
+    background-color: #F26627; /* Laranja similar ao botão original */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart:hover {
+    background-color: #D94F2A; /* Escurece no hover */
+}
+
+/* Seção do Carrinho */
+.cart {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.cart h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Itens no carrinho */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cart-item p {
+    margin: 0;
+}
+
+.cart-item p:last-child {
+    font-weight: bold;
+}
+
+.cart-total {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Botão Confirmar Pedido */
+.confirm-order {
+    background-color: #D94F2A; /* Botão laranja para confirmar pedido */
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.confirm-order:hover {
+    background-color: #C9431F; /* Tom mais escuro no hover */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .menu {
+        grid-template-columns: 1fr; /* Ajuste para uma coluna em telas menores */
+    }
+
+    .cart {
+        margin-top: 20px;
+    }
+}
