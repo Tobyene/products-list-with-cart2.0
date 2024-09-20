@@ -92,6 +92,12 @@
             font-weight: bold;
         }
 
+        .delivery-info {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+
         .confirm-order {
             background-color: #D94F2A;
             color: white;
@@ -99,6 +105,36 @@
             width: 100%;
             padding: 10px 0;
             border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Modal Styling */
+        #order-confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #order-confirmation-modal .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Remove button */
+        .remove-item {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
             cursor: pointer;
         }
     </style>
@@ -127,35 +163,183 @@
                 <button class="add-to-cart">Add to Cart</button>
             </div>
             <div class="menu-item">
-              <img src="assets/images/image-baklava-desktop.jpg" alt="Baklava">
-              <h3>Sweet Pakistanese Baklava</h3>
-              <p>$7.50</p>
-              <button class="add-to-cart">Add to Cart</button>
-          </div>
-            <!-- Add more menu items as needed -->
+                <img src="assets/images/image-baklava-desktop.jpg" alt="Baklava">
+                <h3>Pistachio Baklava</h3>
+                <p>$4.00</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="assets/images/image-meringue-desktop.jpg" alt="Lemon Meringue Pie">
+                <h3>Lemon Meringue Pie</h3>
+                <p>$5.00</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="assets/images/image-tiramisu-desktop.jpg" alt="Classic Tiramisu">
+                <h3>Classic Tiramisu</h3>
+                <p>$5.50</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="assets/images/image-panna-cotta-desktop.jpg" alt="Panna Cotta">
+                <h3>Panna Cotta</h3>
+                <p>$6.50</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="assets/images/image-brownie-desktop.jpg" alt="Fancy Brownie">
+                <h3>Fancy Brownie</h3>
+                <p>$6.50</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+            <div class="menu-item">
+                <img src="assets/images/image-cake-desktop.jpg" alt="Strawberry Cake">
+                <h3>Strawberry Cake</h3>
+                <p>$9.00</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
         </div>
 
         <!-- Cart Section -->
         <div class="cart">
-            <h2>Your Cart (0)</h2>
-            <img src="assets/images/illustration-empty-cart.svg" alt="empty cart">
-            <div class="cart-item">
-                <p></p>
-                <p></p>
+            <h2>Your Cart (<span id="cart-count">0</span>)</h2>
+            <div id="cart-items">
+                <!-- Cart items will be dynamically inserted here -->
             </div>
-            <div class="cart-item">
-                <p></p>
-                <p></p>
-            </div>
-            <div class="cart-item">
-                <p></p>
-                <p></p>
-            </div>
-
-            <p class="cart-total">Order Total: $00.00</p>
-            <button class="confirm-order">Confirm Order</button>
+            <p class="cart-total">Order Total: $<span id="cart-total">00.00</span></p>
+            <p class="delivery-info">This is a <strong>carbon-neutral</strong> delivery</p>
+            <button class="confirm-order" onclick="confirmOrder()">Confirm Order</button>
         </div>
     </div>
+
+    <!-- Modal for Order Confirmation -->
+    <div id="order-confirmation-modal">
+        <div class="modal-content">
+            <h2>Order Confirmed</h2>
+            <p>Thank you for your purchase!</p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Shopping cart logic
+        class Product {
+            constructor(imageUrl, category, productName, price) {
+                this.imageUrl = imageUrl;
+                this.category = category;
+                this.productName = productName;
+                this.price = price;
+                this.quantity = 1; // Adding quantity property
+            }
+
+            getPrice() {
+                return this.price * this.quantity; // Multiply price by quantity
+            }
+
+            getProductName() {
+                return this.productName;
+            }
+
+            increaseQuantity() {
+                this.quantity++;
+            }
+
+            decreaseQuantity() {
+                if (this.quantity > 1) {
+                    this.quantity--;
+                }
+            }
+
+            getQuantity() {
+                return this.quantity;
+            }
+        }
+
+        class ShoppingCart {
+            constructor() {
+                this.items = [];
+                this.total = 0;
+            }
+
+            addToCart(product) {
+                const existingProduct = this.items.find(item => item.getProductName() === product.getProductName());
+                if (existingProduct) {
+                    existingProduct.increaseQuantity();
+                } else {
+                    this.items.push(product);
+                }
+                this.total += product.getPrice();
+            }
+
+            removeFromCart(productName) {
+                const productIndex = this.items.findIndex(item => item.getProductName() === productName);
+                if (productIndex !== -1) {
+                    this.total -= this.items[productIndex].getPrice();
+                    this.items.splice(productIndex, 1); // Remove item
+                }
+            }
+
+            getCartItems() {
+                return this.items;
+            }
+
+            getTotal() {
+                this.total = this.items.reduce((total, item) => total + item.getPrice(), 0);
+                return this.total;
+            }
+        }
+
+        const cart = new ShoppingCart();
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const productElement = event.target.closest('.menu-item');
+                const productName = productElement.querySelector('h3').innerText;
+                const productPrice = parseFloat(productElement.querySelector('p').innerText.replace('$', ''));
+                const productImage = productElement.querySelector('img').src;
+
+                const newProduct = new Product(productImage, 'Dessert', productName, productPrice);
+                cart.addToCart(newProduct);
+                updateCartUI();
+            });
+        });
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartItemsContainer.innerHTML = ''; // Clear cart for update
+
+            cart.getCartItems().forEach(item => {
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.classList.add('cart-item');
+                cartItemDiv.innerHTML = `<p>${item.getProductName()} (x${item.getQuantity()})</p><p>$${item.getPrice().toFixed(2)}</p>
+                <button class="remove-item" onclick="removeItem('${item.getProductName()}')">Remove</button>`;
+                cartItemsContainer.appendChild(cartItemDiv);
+            });
+
+            cartCount.innerText = cart.getCartItems().length;
+            cartTotal.innerText = cart.getTotal().toFixed(2);
+        }
+
+        function removeItem(productName) {
+            cart.removeFromCart(productName);
+            updateCartUI();
+        }
+
+        function confirmOrder() {
+            if (cart.getCartItems().length === 0) {
+                alert('Your cart is empty. Please add some items.');
+                return;
+            }
+            document.getElementById('order-confirmation-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('order-confirmation-modal').style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
