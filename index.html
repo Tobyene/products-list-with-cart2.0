@@ -67,17 +67,22 @@
             </div>
         </div>
 
-        <!-- Cart Section -->
-        <div class="cart">
-            <h2>Your Cart (<span id="cart-count">0</span>)</h2>
-            <div id="cart-items">
-                <!-- Cart items will be dynamically inserted here -->
-            </div>
-            <p class="cart-total">Order Total: $<span id="cart-total">00.00</span></p>
-            <p class="delivery-info">This is a <strong>carbon-neutral</strong> delivery</p>
-            <button class="confirm-order" onclick="confirmOrder()">Confirm Order</button>
-        </div>
+<!-- Cart Section -->
+<div class="cart">
+    <h2>Your Cart (<span id="cart-count">0</span>)</h2>
+    <div id="cart-items">
+        <p>
+        <img src="assets/images/illustration-empty-cart.svg" alt="Empty Cart Icon">
+        <h6> your items will appear here</h6>
+        </p>
     </div>
+    <p class="cart-total">Order Total: $<span id="cart-total">00.00</span></p>
+    <p class="delivery-info" id="delivery-info">
+        <img src="assets/images/icon-carbon-neutral.svg" alt="Carbon Neutral Icon" style="width: 20px; height: 20px; vertical-align: middle;"> 
+        This is a <strong>carbon-neutral</strong> free delivery
+    </p>
+    <button class="confirm-order" id="confirm-order" onclick="confirmOrder()">Confirm Order</button>
+</div>
 
   <!-- Modal for Order Confirmation -->
 <!-- Modal for Order Confirmation -->
@@ -166,37 +171,64 @@
 
         const cart = new ShoppingCart();
 
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const productElement = event.target.closest('.menu-item');
-                const productName = productElement.querySelector('h3').innerText;
-                const productPrice = parseFloat(productElement.querySelector('p').innerText.replace('$', ''));
-                const productImage = productElement.querySelector('img').src;
+// Atualiza a interface do carrinho ao carregar a página
+updateCartUI();
 
-                const newProduct = new Product(productImage, 'Dessert', productName, productPrice);
-                cart.addToCart(newProduct);
-            });
-        });
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', (event) => {
+        const productElement = event.target.closest('.menu-item');
+        const productName = productElement.querySelector('h3').innerText;
+        const productPrice = parseFloat(productElement.querySelector('p').innerText.replace('$', ''));
+        const productImage = productElement.querySelector('img').src;
+
+        const newProduct = new Product(productImage, 'Dessert', productName, productPrice);
+        cart.addToCart(newProduct);
+    });
+});
+
 
         function updateCartUI() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const cartCount = document.getElementById('cart-count');
-            const cartTotal = document.getElementById('cart-total');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const deliveryInfo = document.getElementById('delivery-info');
+    const confirmOrderButton = document.getElementById('confirm-order');
+    const orderTotal = document.querySelector('.cart-total'); // Seleciona o elemento "Order Total"
 
-            cartItemsContainer.innerHTML = ''; // Clear cart for update
+    cartItemsContainer.innerHTML = ''; // Limpa o carrinho para atualização
 
-            cart.getCartItems().forEach(item => {
-                const cartItemDiv = document.createElement('div');
-                cartItemDiv.classList.add('cart-item');
-                cartItemDiv.innerHTML = `<p>${item.getProductName()} (x${item.getQuantity()})</p>
-                <p>$${item.getPrice().toFixed(2)}</p>
-                <button class="remove-item" onclick="removeItem('${item.getProductName()}')">Remove</button>`;
-                cartItemsContainer.appendChild(cartItemDiv);
-            });
+    if (cart.getCartItems().length === 0) {
+        // Exibe ícone de carrinho vazio
+        cartItemsContainer.innerHTML = `
+            <p>
+                <img src="assets/images/illustration-empty-cart.svg" alt="Empty Cart Icon">
+                <h6> your items will appear here</h6>
+            </p>`;
+        
+        // Oculta a mensagem de entrega, botão de confirmação e total do pedido
+        deliveryInfo.style.display = 'none';
+        confirmOrderButton.style.display = 'none';
+        orderTotal.style.display = 'none'; // Oculta o total do pedido
+    } else {
+        // Preenche o carrinho com os itens
+        cart.getCartItems().forEach(item => {
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.classList.add('cart-item');
+            cartItemDiv.innerHTML = `<p>${item.getProductName()} (x${item.getQuantity()})</p>
+            <p>$${item.getPrice().toFixed(2)}</p>
+            <button class="remove-item" onclick="removeItem('${item.getProductName()}')">Remove</button>`;
+            cartItemsContainer.appendChild(cartItemDiv);
+        });
 
-            cartCount.innerText = cart.getCartItems().length;
-            cartTotal.innerText = cart.getTotal().toFixed(2);
-        }
+        // Exibe a mensagem de entrega, botão de confirmação e total do pedido
+        deliveryInfo.style.display = 'block';
+        confirmOrderButton.style.display = 'block';
+        orderTotal.style.display = 'block'; // Mostra o total do pedido
+    }
+
+    cartCount.innerText = cart.getCartItems().length;
+    cartTotal.innerText = cart.getTotal().toFixed(2);
+}
 
         function removeItem(productName) {
             cart.removeFromCart(productName);
