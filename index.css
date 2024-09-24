@@ -64,6 +64,33 @@ body {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.empty-cart {
+  display: flex;
+  align-items: center; /* Alinha verticalmente no centro */
+  justify-content: center; /* Alinha horizontalmente no centro */
+  height: 100px; /* Ajuste a altura conforme necessário */
+}
+
+.empty-cart p {
+  margin: 0; /* Remove margens padrão */
+}
+/*estilização carrinho vazio*/
+#cart-items {
+  text-align: center; /* Centraliza o conteúdo */
+}
+
+#cart-items p {
+  display: flex; /* Ativa o Flexbox */
+  align-items: center; /* Alinha verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  margin: 0; /* Remove margens */
+}
+
+#cart-items img {
+  margin-right: 10px; /* Espaço entre o ícone e o texto */
+}
+
+
 .cart h2 {
   margin-bottom: 20px;
 }
