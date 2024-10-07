@@ -100,11 +100,6 @@ body {
   box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.1); /* Efeito de afundamento */
 }
 
-/* Afundar ao manter pressionado */
-.add-to-cart:focus {
-  transform: translateY(-28px) scale(0.98);
-}
-
 .cart {
   flex: 1;
   background-color: white;
